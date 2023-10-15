@@ -1,0 +1,5 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+DATABASE_URL="postgresql://postgres:rZcQ0zFhEezfbGWPTXZ8@containers-us-west-70.railway.app:5983/railway"
