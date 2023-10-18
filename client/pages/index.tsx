@@ -13,7 +13,7 @@ useEffect(() => {
     data => {
       // console.log(data)
       
-setMessage(data.Brandon)
+setMessage(data.message)
       
 
     }

@@ -24,5 +24,5 @@ app.listen(DEV_PORT, () => {
 });
 
 app.get("/api/home", (req: Request, res: Response) => {
-  res.json({ Brandon: "Yo Panini you a whole PUSSY" });
+  res.json({ message: "Backend Api Recieved" });
 });
