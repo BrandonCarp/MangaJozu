@@ -17,6 +17,7 @@ model Customer {
   password  String
   firstName String
   lastName  String
+  score     Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Order     Order[]
@@ -31,10 +32,10 @@ model Manga {
   genre       String
   coverImage  String
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime? @updatedAt
   author      Author    @relation(fields: [authorId], references: [id])
   authorId    Int
-  Chapter     Chapter[]
+  // Chapter     Chapter[]
   Cart        Cart?     @relation(fields: [cartId], references: [id])
   cartId      Int?
 }
@@ -47,17 +48,17 @@ model Author {
   Manga     Manga[]
 }
 
-model Chapter {
-  id            Int      @id @default(autoincrement())
-  chapterNumber Int
-  title         String   @db.VarChar(255)
-  releaseDate   DateTime
-  pages         Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  manga         Manga    @relation(fields: [mangaId], references: [id])
-  mangaId       Int
-}
+// model Chapter {
+//   id            Int      @id @default(autoincrement())
+//   chapterNumber Int
+//   title         String   @db.VarChar(255)
+//   releaseDate   DateTime
+//   pages         Int
+//   createdAt     DateTime @default(now())
+//   updatedAt     DateTime @updatedAt
+//   manga         Manga    @relation(fields: [mangaId], references: [id])
+//   mangaId       Int
+// }
 
 model Cart {
   id         Int      @id @default(autoincrement())

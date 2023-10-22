@@ -6,3 +6,9 @@ https://www.youtube.com/watch?v=30LWjhZzg50&list=WL&index=2&t=6579s - TS
 
 API : https://jikan.moe/
 https://api.jikan.moe/v4/anime?q=&sfw
+
+Cache Validation
+All requests return a ETag header which is an MD5 hash of the response
+You can use this hash to verify if there's new or updated content by suppliying it as the value for the If-None-Match in your next request header
+You will get a HTTP 304 - Not Modified response if the content has not changed
+If the content has changed, you'll get a HTTP 200 - OK response with the updated JSON response
