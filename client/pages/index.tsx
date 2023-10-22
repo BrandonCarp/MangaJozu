@@ -6,22 +6,41 @@ function Index() {
 
  const [message, setMessage] = useState<String>()
 
-useEffect(() => {
-  fetch("http://localhost:7000/api/home").then(
+ const fetchManga = () => {
+  
+  fetch("http://localhost:8080/manga/search").then(
     Response => Response.json()
   ).then(
     data => {
-      // console.log(data)
+      console.log(data.data.title)
       
-setMessage(data.message)
+setMessage(data.data.title)
       
 
     }
   )
-}, [])
+ }
+// useEffect(() => {
+//   fetch("http://localhost:8080/manga/search").then(
+//     Response => Response.json()
+//   ).then(
+//     data => {
+//       // console.log(data)
+      
+// setMessage(data.message)
+      
+
+//     }
+//   )
+// }, [])
 
   return (
-    <div>{message}</div>
+    <div>
+    <h1>JSON HERE: {message}</h1>
+    
+    <button className='bg-teal-600 px-2 py-1 rounded font-bold' onClick={fetchManga}>Click For Title
+      </button></div>
+
   )
 }
 

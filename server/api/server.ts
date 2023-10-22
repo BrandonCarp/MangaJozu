@@ -36,7 +36,7 @@ app.get(["/manga/search"], (req: Request, res: Response) => {
   axios.get(fetchManga)
     .then(function (Response: AxiosResponse) {
       res.send(Response.data)
-      console.log(Response.data);
+      console.log(Response.data.data.title);
     }).catch(function (error: Error) {
       res.send(error);
       console.log(error);

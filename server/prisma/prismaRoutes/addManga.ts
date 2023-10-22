@@ -52,7 +52,15 @@ const formatManga = (apiData: ApiMangaItem) => {
 
 //     await prisma.$connect();
 
-//     await prisma.manga.create({ data: processedData });
+//     await prisma.manga.create({data: {
+//       title: processedData.title,
+//       description: processedData.description,
+//       coverImage: processedData.coverImage,
+//       createdAt: processedData.createdAt,
+//       author: processedData.author
+//     }
+    
+//   });
 //   } catch (error) {
 //     console.error('Error:', error);
 //   } finally {
