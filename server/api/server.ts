@@ -9,6 +9,7 @@ const cors = require("cors");
 const app = express();
 
 const fetchManga = process.env.FETCH_MANGA;
+const fetchBerserk = process.env.FETCH_BERSERK;
 
 app.use(
   cors({
@@ -34,6 +35,17 @@ app.get("/api/home", (req: Request, res: Response) => {
 
 app.get(["/manga/search"], (req: Request, res: Response) => {
   axios.get(fetchManga)
+    .then(function (Response: AxiosResponse) {
+      res.send(Response.data)
+      console.log(Response.data.data.title);
+    }).catch(function (error: Error) {
+      res.send(error);
+      console.log(error);
+    })
+});
+
+app.get(["/manga/berserk"], (req: Request, res: Response) => {
+  axios.get(fetchBerserk)
     .then(function (Response: AxiosResponse) {
       res.send(Response.data)
       console.log(Response.data.data.title);
