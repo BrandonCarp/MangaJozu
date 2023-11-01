@@ -40,15 +40,13 @@ var client_1 = require("@prisma/client");
 var axios = require('axios');
 // import { MangaItem } from "../../api/interface";
 var prisma = new client_1.PrismaClient();
-var formatManga = function (apiData) {
-    var _a;
+var formatManga = function (data) {
     return {
-        title: apiData.title,
-        description: apiData.synopsis,
-        genre: (_a = apiData.genres[0]) === null || _a === void 0 ? void 0 : _a.name,
-        coverImage: apiData.images.jpg.image_url,
-        createdAt: new Date(apiData.published.from),
-        author: { connect: { id: 1 } },
+        title: data.title,
+        description: data.synopsis,
+        coverImage: data.images.jpg.image_url,
+        createdAt: new Date(data.published.from),
+        author: data.author.name,
     };
 };
 function addManga() {
@@ -57,33 +55,43 @@ function addManga() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 4, 5, 7]);
+                    _a.trys.push([0, 3, , 4]);
                     fetchManga = process.env.FETCH_MANGA;
                     return [4 /*yield*/, axios.get(fetchManga)];
                 case 1:
                     apiData = _a.sent();
-                    processedData = formatManga(apiData.data);
-                    return [4 /*yield*/, prisma.$connect()];
+                    return [4 /*yield*/, Promise.all(apiData.data.data.map(function (data) { return formatManga(data); }))];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, prisma.manga.create({ data: processedData })];
+                    processedData = _a.sent();
+                    console.log(processedData);
+                    return [3 /*break*/, 4];
                 case 3:
-                    _a.sent();
-                    return [3 /*break*/, 7];
-                case 4:
                     error_1 = _a.sent();
                     console.error('Error:', error_1);
-                    return [3 /*break*/, 7];
-                case 5: return [4 /*yield*/, prisma.$disconnect()];
-                case 6:
-                    _a.sent();
-                    return [7 /*endfinally*/];
-                case 7: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
 }
-addManga();
+// addManga();
+function testFunction() {
+    return __awaiter(this, void 0, void 0, function () {
+        var fetchManga, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fetchManga = process.env.FETCH_MANGA;
+                    return [4 /*yield*/, axios.get(fetchManga)];
+                case 1:
+                    data = _a.sent();
+                    console.log(data.data);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+testFunction();
 // async function fetchDataAndStoreInDB() {
 //   try {
 //     // Fetch data from the API

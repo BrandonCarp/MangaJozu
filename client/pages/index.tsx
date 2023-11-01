@@ -1,25 +1,50 @@
 import React, {useEffect, useState, } from 'react'
-
+const axios = require('axios');
 
 
 function Index() {
 
- const [message, setMessage] = useState<String>()
+ const [message, setMessage] = useState<String>("")
 
- const fetchManga = () => {
+//  const fetchManga = () => {
   
-  fetch("http://localhost:8080/manga/search").then(
-    Response => Response.json()
-  ).then(
-    data => {
-      console.log(data.data.title)
+//   fetch("http://localhost:8080/manga/search").then(
+//     Response => Response.json()
+//   ).then(
+//     data => {
+//       console.log(data.data.title)
       
-setMessage(data.data.title)
+// setMessage(data.data.title)
       
 
-    }
-  )
- }
+//     }
+//   )
+//  }
+
+ async function fetchManga() {
+  
+  const apiResponse = await axios.get("http://localhost:8080/manga/search")
+
+    console.log(apiResponse.data.data)
+    setMessage(apiResponse.data.data)
+
+ 
+}
+
+// const fetchManga = () => {
+  
+//     fetch("http://localhost:8080/manga/search").then(
+//       Response => Response.json()
+//     ).then(
+//       data => {
+//         console.log(data.data)
+        
+//   // setMessage(data.data)
+        
+  
+//       }
+//     )
+//    }
 // useEffect(() => {
 //   fetch("http://localhost:8080/manga/search").then(
 //     Response => Response.json()
@@ -36,7 +61,8 @@ setMessage(data.data.title)
 
   return (
     <div>
-    <h1>JSON HERE: {message}</h1>
+    <h1>JSON HERE:</h1>
+    
     
     <button className='bg-teal-600 px-2 py-1 rounded font-bold' onClick={fetchManga}>Click For Title
       </button></div>

@@ -1,27 +1,42 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient, } from "@prisma/client";
+
 const axios = require('axios');
 // import { MangaItem } from "../../api/interface";
 
 const prisma = new PrismaClient();
 
-interface ApiMangaItem {
+
+export interface MangaListItem {
   title: string;
   synopsis: string;
-  images: { jpg: { image_url: string } };
-  published: { from: string };
-  authors: Array<{ mal_id: number; name: string }>;
+  images: {
+    jpg: {
+      image_url: string;
+    }
+  }
+  published: {
+    from: string;
+  }
+  author: {
+    name: string;
+  }
 }
 
-const formatManga = (apiData: ApiMangaItem) => {
+export interface MangaListResponse {
+  items: MangaListItem[];
+}
+
+const formatManga = (data: MangaListItem) => {
 
   return {
-    title: apiData.title,
-    description: apiData.synopsis,
-    coverImage: apiData.images.jpg.image_url,
-    createdAt: new Date(apiData.published.from),
-    author: { connect: { id: apiData.authors[0]?.mal_id || 1 } },
+    title: data.title,
+    description: data.synopsis,
+    coverImage: data.images.jpg.image_url,
+    createdAt: new Date(data.published.from),
+    author: data.author.name,
   };
 };
+
 
 async function addManga() {
   try {
@@ -29,9 +44,12 @@ async function addManga() {
     const apiData = await axios.get(fetchManga);
 
     await prisma.$connect();
-console.log(fetchManga)
-    for ( i <apiData.data.length; i++) {
-      const processedData = formatManga(data);
+// console.log(apiData.data.data)
+
+const processedData  = await Promise.all(apiData.data.data.map((data: MangaListItem) => formatManga(data)))
+console.log(`This is the data ${processedData} Processed data`)
+   
+      // const processedData =  formatManga(data);
 
       await prisma.manga.create({
         data: {
@@ -41,23 +59,25 @@ console.log(fetchManga)
           createdAt: processedData.createdAt,
           author: processedData.author,
         },
-      });
-    }
+      })
+    
 
-    await prisma.$disconnect();
+    // await prisma.$disconnect();
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
+
+
 // addManga();
 
 async function testFunction() {
   const fetchManga = process.env.FETCH_MANGA;
-  const apiData = await axios.get(fetchManga);
+  const data = await axios.get(fetchManga);
 
   
-  console.log(apiData.data) 
+  console.log(data.data) 
 
 }
 

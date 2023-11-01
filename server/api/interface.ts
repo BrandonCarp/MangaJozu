@@ -13,15 +13,34 @@
 //   cartId      Int?
 // }
 
-export interface MangaItem {
+// export interface MangaItem {
+//   title: string;
+//   description: string;
+//   genre: string;
+//   coverImage: string;
+//   createdAt: Date; 
+//   author: {
+//     connect: { id: number }; 
+//   };
+// }
+
+
+export interface MangaListItem {
   title: string;
-  description: string;
-  genre: string;
-  coverImage: string;
-  createdAt: Date; 
+  synopsis: string;
+  url: string;
+  rank: number;
+  score: number;
+  published: {
+    from: string;
+  }
   author: {
-    connect: { id: number }; 
-  };
+    name: string;
+  }
+}
+
+export interface MangaListResponse {
+  items: MangaListItem[];
 }
 
 
