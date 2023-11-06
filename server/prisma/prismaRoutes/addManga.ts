@@ -9,17 +9,16 @@ const prisma = new PrismaClient();
 export interface MangaListItem {
   title: string;
   synopsis: string;
-  images: {
-    jpg: {
+  trailer: {
+    images: {
+   
       image_url: string;
-    }
+  
+  }}
+  aired: {
+    from: string | Date | undefined ;
   }
-  published: {
-    from: string;
-  }
-  author: {
-    name: string;
-  }
+  title_japanese: string,
 }
 
 export interface MangaListResponse {
@@ -34,11 +33,15 @@ const formatManga = (data: MangaListItem) => {
   return {
     title: data.title,
     description: data.synopsis,
-    coverImage: data.images.jpg.image_url,
-    createdAt: new Date(data.published.from),
-    author: data.author.name,
+    trailer: data.trailer.images.image_url,
+    createdAt: data.aired.from,
+    title_japanese: data.title_japanese,
   };
 };
+
+async function disconnect() {
+  await prisma.$disconnect();
+}
 
 // Switch to anime site or stay manga ?
 async function addAnime() {
@@ -48,62 +51,50 @@ async function addAnime() {
 
     const apiData = response.data.data; 
 
-    
-      apiData.forEach((object: MangaListItem) => {
-        console.log(object); 
+    for(const object of apiData) {
+      const formattedData = formatManga(object)
+      await prisma.manga.create({
+        data: {
+          title: formattedData.title,
+          description: formattedData.description,
+          coverImage: formattedData.trailer,
+          createdAt: formattedData.createdAt,
+          author: formattedData.title_japanese,
+        },
+      })
+      
+    };
+
+      // apiData.forEach((object: MangaListItem) => {
+      //   const formattedData = formatManga(apiData)
+      //   await prisma.manga.create({
+      //     data: {
+      //       title: formattedData.title,
+      //       description: formattedData.description,
+      //       coverImage: formattedData.coverImage,
+      //       createdAt: formattedData.createdAt,
+      //       author: formattedData.author,
+      //     },
+      //   })
         
-      });
-    
+      // });
+      
+     disconnect()
 }
 
 
 addAnime();
 
-
-// async function addManga() {
-//   try {
-//     const fetchManga = process.env.FETCH_MANGA;
-//     const response = await axios.get(fetchManga);
-
-//     const apiData = response.data.data; // Access the 'data' field from the response
-
-//     if (Array.isArray(apiData)) {
-//       apiData.forEach((object) => {
-//         console.log(object); // Logging each manga object retrieved from the API
-//         // Perform operations with each manga object as needed
-//       });
-//     } else {
-//       console.error('Data is not in the expected array format');
-//       console.log(apiData); // Check the structure of the received 'data' field
-//     }
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
-// // Make sure to call the addManga function to execute the API call and processing
-// addManga();
-
-// console.log(`This is the data ${processedData} Processed data`)
-   
       // const processedData =  formatManga(data);
 
-  //     await prisma.manga.create({
-  //       data: {
-  //         title: processedData.title,
-  //         description: processedData.description,
-  //         coverImage: processedData.coverImage,
-  //         createdAt: processedData.createdAt,
-  //         author: processedData.author,
-  //       },
-  //     })
+      // await prisma.manga.create({
+      //   data: {
+      //     title: processedData.title,
+      //     description: processedData.description,
+      //     coverImage: processedData.coverImage,
+      //     createdAt: processedData.createdAt,
+      //     author: processedData.author,
+      //   },
+      // })
     
-
-  //   // await prisma.$disconnect();
-  // } catch (error) {
-  //   console.error('Error:', error);
-  // }
-
-
-
 
