@@ -26,6 +26,9 @@ export interface MangaListResponse {
   items: MangaListItem[];
 }
 
+
+
+
 const formatManga = (data: MangaListItem) => {
 
   return {
@@ -37,75 +40,69 @@ const formatManga = (data: MangaListItem) => {
   };
 };
 
+async function addAnime() {
+
+    const fetchManga = process.env.FETCH_MANGA;
+    const response = await axios.get(fetchManga);
+
+    const apiData = response.data.data; 
+
+    
+      apiData.forEach((object: MangaListItem) => {
+        console.log(object); 
+        
+      });
+    
+}
+
+
+addAnime();
+
 
 async function addManga() {
   try {
     const fetchManga = process.env.FETCH_MANGA;
-    const apiData = await axios.get(fetchManga);
+    const response = await axios.get(fetchManga);
 
-    await prisma.$connect();
-// console.log(apiData.data.data)
+    const apiData = response.data.data; // Access the 'data' field from the response
 
-const processedData  = await Promise.all(apiData.data.data.map((data: MangaListItem) => formatManga(data)))
-console.log(`This is the data ${processedData} Processed data`)
-   
-      // const processedData =  formatManga(data);
-
-      await prisma.manga.create({
-        data: {
-          title: processedData.title,
-          description: processedData.description,
-          coverImage: processedData.coverImage,
-          createdAt: processedData.createdAt,
-          author: processedData.author,
-        },
-      })
-    
-
-    // await prisma.$disconnect();
+    if (Array.isArray(apiData)) {
+      apiData.forEach((object) => {
+        console.log(object); // Logging each manga object retrieved from the API
+        // Perform operations with each manga object as needed
+      });
+    } else {
+      console.error('Data is not in the expected array format');
+      console.log(apiData); // Check the structure of the received 'data' field
+    }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(error);
   }
 }
 
-
-
+// // Make sure to call the addManga function to execute the API call and processing
 // addManga();
 
-async function testFunction() {
-  const fetchManga = process.env.FETCH_MANGA;
-  const data = await axios.get(fetchManga);
+// console.log(`This is the data ${processedData} Processed data`)
+   
+      // const processedData =  formatManga(data);
 
-  
-  console.log(data.data) 
+  //     await prisma.manga.create({
+  //       data: {
+  //         title: processedData.title,
+  //         description: processedData.description,
+  //         coverImage: processedData.coverImage,
+  //         createdAt: processedData.createdAt,
+  //         author: processedData.author,
+  //       },
+  //     })
+    
 
-}
+  //   // await prisma.$disconnect();
+  // } catch (error) {
+  //   console.error('Error:', error);
+  // }
 
-testFunction();
 
-// async function fetchDataAndStoreInDB() {
-//   try {
-//     // Fetch data from the API
-//     const apiData = await axios.get('https://api.example.com/data');
 
-//     // Process and transform the data if needed
-//     const processedData = processApiData(apiData);
 
-//     // Connect to the database
-//     await prisma.$connect();
-
-//     // Insert or update data in the database
-//     await prisma.tableName.createMany({
-//       data: processedData,
-//       skipDuplicates: true,
-//     });
-
-//     // Disconnect from the database
-//     await prisma.$disconnect();
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
-
-// // Run the function manually or on a schedule
-// fetchDataAndStoreInDB();

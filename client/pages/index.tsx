@@ -72,4 +72,4 @@ function Index() {
 
 export default Index
 
-// https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+// https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kerne
