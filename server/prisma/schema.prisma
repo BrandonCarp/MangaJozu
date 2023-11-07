@@ -10,43 +10,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customer {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
-  password  String
-  firstName String
-  lastName  String
-  score     Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Order     Order[]
-  Cart      Cart[]
-  Invoice   Invoice[]
-}
+// model Customer {
+//   id        Int       @id @default(autoincrement())
+//   username  String    @unique
+//   email     String    @unique
+//   password  String
+//   firstName String
+//   lastName  String
+//   score     Int
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   Order     Order[]
+//   Cart      Cart[]
+//   Invoice   Invoice[]
+// }
 
-model Manga {
-  id          Int       @id @default(autoincrement())
-  title       String    @db.VarChar(255)
+// npx prisma generate
+// npx prisma migrate dev
+
+model Anime {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
   description String
-  // genre       String
   coverImage  String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @updatedAt
-  author      String
-  // authorId    Int
-  // Chapter     Chapter[]
-  Cart        Cart?     @relation(fields: [cartId], references: [id])
-  cartId      Int?
+  createdAt   DateTime @default(now())
+  trailer     String
+  // updatedAt   DateTime? @updatedAt
+  // author      String
+  // Cart        Cart?     @relation(fields: [cartId], references: [id])
+  // cartId      Int?
 }
 
-model Author {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  // Manga     Manga[]
-}
+// model Author {
+//   id        Int      @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   // Manga     Manga[]
+// }
 
 // model Chapter {
 //   id            Int      @id @default(autoincrement())
@@ -60,37 +61,37 @@ model Author {
 //   mangaId       Int
 // }
 
-model Cart {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  items      Manga[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-}
+// model Cart {
+//   id         Int      @id @default(autoincrement())
+//   userId     Int
+//   items      Anime[]
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+//   customer   Customer @relation(fields: [customerId], references: [id])
+//   customerId Int
+// }
 
-model Order {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  items      String[]
-  totalPrice Int
-  orderDate  DateTime
-  status     String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  customer   Customer  @relation(fields: [customerId], references: [id])
-  customerId Int
-  Invoice    Invoice[]
-}
+// model Order {
+//   id         Int       @id @default(autoincrement())
+//   userId     Int
+//   items      String[]
+//   totalPrice Int
+//   orderDate  DateTime
+//   status     String
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+//   customer   Customer  @relation(fields: [customerId], references: [id])
+//   customerId Int
+//   Invoice    Invoice[]
+// }
 
-model Invoice {
-  id         Int      @id @default(autoincrement())
-  items      String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  order      Order    @relation(fields: [orderId], references: [id])
-  orderId    Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-}
+// model Invoice {
+//   id         Int      @id @default(autoincrement())
+//   items      String
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+//   order      Order    @relation(fields: [orderId], references: [id])
+//   orderId    Int
+//   customer   Customer @relation(fields: [customerId], references: [id])
+//   customerId Int
+// }
