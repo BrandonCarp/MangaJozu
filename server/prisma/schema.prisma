@@ -34,7 +34,7 @@ model Anime {
   description String
   coverImage  String
   createdAt   DateTime @default(now())
-  trailer     String
+  trailer     String?
   // updatedAt   DateTime? @updatedAt
   // author      String
   // Cart        Cart?     @relation(fields: [cartId], references: [id])

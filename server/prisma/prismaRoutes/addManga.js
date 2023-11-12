@@ -40,76 +40,65 @@ var client_1 = require("@prisma/client");
 var axios = require('axios');
 // import { MangaItem } from "../../api/interface";
 var prisma = new client_1.PrismaClient();
-var formatManga = function (data) {
+var formatAnime = function (data) {
     return {
-        title: data.title,
+        title: data.title_english,
         description: data.synopsis,
         coverImage: data.images.jpg.image_url,
-        createdAt: new Date(data.published.from),
-        author: data.author.name,
+        createdAt: data.aired.from,
+        trailer: data.trailer.url,
     };
 };
-function addManga() {
+function disconnect() {
     return __awaiter(this, void 0, void 0, function () {
-        var fetchManga, apiData, processedData, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    fetchManga = process.env.FETCH_MANGA;
-                    return [4 /*yield*/, axios.get(fetchManga)];
+                case 0: return [4 /*yield*/, prisma.$disconnect()];
                 case 1:
-                    apiData = _a.sent();
-                    return [4 /*yield*/, Promise.all(apiData.data.data.map(function (data) { return formatManga(data); }))];
-                case 2:
-                    processedData = _a.sent();
-                    console.log(processedData);
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_1 = _a.sent();
-                    console.error('Error:', error_1);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-// addManga();
-function testFunction() {
-    return __awaiter(this, void 0, void 0, function () {
-        var fetchManga, data;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    fetchManga = process.env.FETCH_MANGA;
-                    return [4 /*yield*/, axios.get(fetchManga)];
-                case 1:
-                    data = _a.sent();
-                    console.log(data.data);
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
     });
 }
-testFunction();
-// async function fetchDataAndStoreInDB() {
-//   try {
-//     // Fetch data from the API
-//     const apiData = await axios.get('https://api.example.com/data');
-//     // Process and transform the data if needed
-//     const processedData = processApiData(apiData);
-//     // Connect to the database
-//     await prisma.$connect();
-//     // Insert or update data in the database
-//     await prisma.tableName.createMany({
-//       data: processedData,
-//       skipDuplicates: true,
-//     });
-//     // Disconnect from the database
-//     await prisma.$disconnect();
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
-// // Run the function manually or on a schedule
-// fetchDataAndStoreInDB();
+function addAnime() {
+    return __awaiter(this, void 0, void 0, function () {
+        var fetchManga, response, apiData, _i, apiData_1, object, formattedData;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fetchManga = process.env.FETCH_MANGA;
+                    return [4 /*yield*/, axios.get(fetchManga)];
+                case 1:
+                    response = _a.sent();
+                    apiData = response.data.data;
+                    _i = 0, apiData_1 = apiData;
+                    _a.label = 2;
+                case 2:
+                    if (!(_i < apiData_1.length)) return [3 /*break*/, 5];
+                    object = apiData_1[_i];
+                    formattedData = formatAnime(object);
+                    return [4 /*yield*/, prisma.anime.create({
+                            data: {
+                                title: formattedData.title,
+                                description: formattedData.description,
+                                coverImage: formattedData.coverImage,
+                                createdAt: formattedData.createdAt,
+                                trailer: formattedData.trailer,
+                            },
+                        })];
+                case 3:
+                    _a.sent();
+                    _a.label = 4;
+                case 4:
+                    _i++;
+                    return [3 /*break*/, 2];
+                case 5:
+                    ;
+                    disconnect();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+addAnime();
