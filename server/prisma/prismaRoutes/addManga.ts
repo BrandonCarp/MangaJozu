@@ -5,30 +5,35 @@ import { AnimeListItem, AnimeListResponse } from "../../api/interface";
 
 const prisma = new PrismaClient();
 
+// Added Destructuring to clean code up
 
 
+// No checks to see if title already exists in the DB, running risk of dupes
 
-const formatAnime = (data: AnimeListItem) => {
+// Prisma transactions, so that if any promises fail none of the data is inserted
+
+
+const formatAnime = ({title_english, synopsis, images, aired, trailer }: AnimeListItem) => {
 
   return {
-    title: data.title_english,
-    description: data.synopsis,
-    coverImage: data.images.jpg.image_url,
-    createdAt: data.aired.from,
-    trailer: data.trailer.url,
+    title: title_english,
+    description: synopsis,
+    coverImage: images.jpg.image_url,
+    createdAt: aired.from,
+    trailer: trailer.url,
   };
 };
 
 
 async function prismaCreateAnime(animeObject: AnimeListItem) {
-  const formattedData = formatAnime(animeObject)
+  const {title, description, coverImage, createdAt, trailer} = formatAnime(animeObject)
   await prisma.anime.create({
     data: {
-      title: formattedData.title,
-      description: formattedData.description,
-      coverImage: formattedData.coverImage,
-      createdAt: formattedData.createdAt,
-      trailer: formattedData.trailer,
+      title: title,
+      description: description,
+      coverImage: coverImage,
+      createdAt: createdAt,
+      trailer: trailer,
     },
   })
 }
@@ -39,8 +44,11 @@ try{
   const response = await axios.get(fetchAnime);
 
   const apiData = response.data.data; 
-console.log(apiData)
- await Promise.all(apiData.map((object: AnimeListItem) => prismaCreateAnime(object)))
+
+
+
+ await Promise.allSettled(apiData.map((object: AnimeListItem) => prismaCreateAnime(object)))
+
  await prisma.$disconnect();
 } catch (error) {
 console.log(`The Error is :`, error)
