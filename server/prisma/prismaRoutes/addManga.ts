@@ -1,16 +1,10 @@
-import { Anime, Prisma, PrismaClient, } from "@prisma/client";
+import { PrismaClient, } from "@prisma/client";
 
 const axios = require('axios');
-import { AnimeListItem, AnimeListResponse } from "../../api/interface";
+import { AnimeListItem } from "../../api/interface";
 
 const prisma = new PrismaClient();
 
-// Added Destructuring to clean code up
-
-
-// No checks to see if title already exists in the DB, running risk of dupes
-
-// Prisma transactions, so that if any promises fail none of the data is inserted
 
 
 const formatAnime = ({title_english, synopsis, images, aired, trailer }: AnimeListItem) => {
@@ -25,8 +19,22 @@ const formatAnime = ({title_english, synopsis, images, aired, trailer }: AnimeLi
 };
 
 
+async function findDupe(title: string) {
+  const existingAnime = await prisma.anime.findFirst({
+    where: {
+      title: title
+    }
+  })
+  return !!existingAnime;
+}
+
+
 async function prismaCreateAnime(animeObject: AnimeListItem) {
   const {title, description, coverImage, createdAt, trailer} = formatAnime(animeObject)
+  if(await findDupe(title)) {
+    console.log(`Anime title ${title} exists in the database`)
+    return ;
+  }
   await prisma.anime.create({
     data: {
       title: title,
