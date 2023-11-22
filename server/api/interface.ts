@@ -17,3 +17,13 @@ export interface AnimeListItem {
 export interface AnimeListResponse {
   items: AnimeListItem[];
 }
+
+
+export  interface CustomerDetails {
+  userName: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+ }
+

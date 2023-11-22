@@ -2,8 +2,8 @@ import { PrismaClient, } from "@prisma/client";
 
 const axios = require('axios');
 import { AnimeListItem } from "../../api/interface";
+import prisma from "../client";
 
-const prisma = new PrismaClient();
 
 
 
