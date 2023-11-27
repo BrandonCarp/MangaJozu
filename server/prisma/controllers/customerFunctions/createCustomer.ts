@@ -4,21 +4,21 @@ import { CustomerDetails } from "../../../api/interface";
 
 // Notes
 
-// create function that creates new customer
-// Must check that user is not duplicate
 // utilize JWT 
 // Auth0 
 
 
 // Customer example
-const customer = { 
-  userName: "HakariJordan1's",
- email: "bcarpo@gmail.com",
-password: 'testpassword',
-firstName: "Brandon",
-lastName: "Carpenter"
-}
+// const customer = { 
+//   userName: "HakariJordan1's",
+//  email: "bcarpo@gmail.com",
+// password: 'testpassword',
+// firstName: "Brandon",
+// lastName: "Carpenter"
+// }
 
+
+// https://manage.auth0.com/dashboard/us/dev-7hi6cohckgtzdhik/  Auth0
 
 
 async function createCustomer ({userName, email, password, firstName, lastName}: CustomerDetails) {
@@ -49,6 +49,6 @@ async function createCustomer ({userName, email, password, firstName, lastName}:
 }
 
 
-createCustomer(customer);
+// createCustomer(customer);
 
  
