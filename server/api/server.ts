@@ -7,23 +7,23 @@ require("dotenv").config();
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const cors = require("cors");
 
-
-// 2:40 
-// https://www.youtube.com/watch?v=HTjfDUm1RsU
-
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'http://localhost:3000',
-  clientID: 'EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa',
-  issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com'
-};
-
 const app = express();
 
 const fetchManga = process.env.FETCH_MANGA;
 const fetchBerserk = process.env.FETCH_BERSERK;
+
+
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: process.env.BASEURL,
+  clientID: process.env.CLIENTID,
+  issuerBaseURL:  process.env.ISSUER,
+};
+
+app.use(auth(config))
 
 app.use(
   cors({

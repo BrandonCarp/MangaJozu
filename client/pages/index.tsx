@@ -65,7 +65,14 @@ function Index() {
     
     
     <button className='bg-teal-600 px-2 py-1 rounded font-bold' onClick={fetchManga}>Click For Title
-      </button></div>
+      </button>
+      <ul >
+        <li className='my-4'><a className='bg-teal-600 px-2 py-1 rounded font-bold' href='/login/'>Login</a></li>
+        <li><a className='bg-teal-600 px-2 py-1 rounded font-bold' href='/logout/'>Logout</a></li>
+      </ul>
+      </div>
+
+      
 
   )
 }
