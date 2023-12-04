@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import prisma from "../../client";
-import { CustomerDetails } from "../../../api/interface";
+import prisma from "../prisma/client";
+import { CustomerDetails } from "../middleware/interface";
 
 // Notes
 

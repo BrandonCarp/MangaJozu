@@ -1,5 +1,5 @@
 import { error } from "console";
-import prisma from "../../client";
+import prisma from "../prisma/client";
 
 
 
