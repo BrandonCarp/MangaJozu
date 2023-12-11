@@ -17,7 +17,7 @@ const fetchBerserk = process.env.FETCH_BERSERK;
 const checkJwt = auth({
   audience: `${API_IDENTIFIER}`,
   issuerBaseURL: `${BASE_DOMAIN}`,
-  tokenSigningAlg: `RS256`,
+  tokenSigningAlg: 'HS512',
 });
 
 
@@ -61,6 +61,13 @@ app.get("/api/home", (req: Request, res: Response) => {
 });
 
 
+
+
+
+
+
+
+// Relocate below code soon
 app.get(["/manga/search"], (req: Request, res: Response) => {
   axios.get(fetchManga)
     .then(function (Response: AxiosResponse) {
