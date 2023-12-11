@@ -1,24 +1,36 @@
-// Example auth page
+import { Request, Response } from 'express';
+import { auth } from 'express-openid-connect';
 
-// const jwt = require("jsonwebtoken");
-// require("dotenv").config();
+const express = require('express');
+const app = express();
 
-// module.exports = async (req, res, next) => {
-//     if (
-//         req.headers.authorization &&
-//         req.headers.authorization.startsWith("Bearer")
-//     ) {
-//         try {
-//             const token = req.headers.authorization.split(" ")[1];
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
-//             if (!token) res.status(403).json({ error: "Not Authorized" });
 
-//             const payload = jwt.verify(token, process.env.jwtSecret);
 
-//             req.user = payload;
-//         } catch (err) {
-//             res.status(403).json(false);
-//         }
-//     }
-//     next();
-// };
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: `${CLIENT_SECRET}`,
+  baseURL: 'http://localhost:8080',
+  clientID: 'EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa',
+  issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com'
+};
+
+
+app.use(auth(config));
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+
+
+// req.isAuthenticated is provided from the auth router
+// app.get('/', (req: Request  , res: Response) => {
+//   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+// });
+
+// app.get('/logout', (req: Request, res: Response) => {
+//   req.logout(); // Clears the user's session
+//   res.redirect('/'); // Redirect to the home page or another appropriate page
+// });
+
+export default  auth;
