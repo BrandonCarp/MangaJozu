@@ -21,15 +21,13 @@ function Index() {
 //   )
 //  }
 
- async function fetchManga() {
+//  async function fetchManga() {
   
-  const apiResponse = await axios.get("http://localhost:8080/manga/search")
+//   const apiResponse = await axios.get("http://localhost:8080/manga/search")
 
-    console.log(apiResponse.data.data)
-    setMessage(apiResponse.data.data)
-
- 
-}
+//     console.log(apiResponse.data.data)
+//     setMessage(apiResponse.data.data)
+// }
 
 // const fetchManga = () => {
   
@@ -64,11 +62,11 @@ function Index() {
     <h1>JSON HERE:</h1>
     
     
-    <button className='bg-teal-600 px-2 py-1 rounded font-bold' onClick={fetchManga}>Click For Title
-      </button>
+    {/* <button className='bg-teal-600 px-2 py-1 rounded font-bold' onClick={fetchManga}>Click For Title
+      </button> */}
       <ul >
-        <li className='my-4'><a className='bg-teal-600 px-2 py-1 rounded font-bold' href='/login/'>Login</a></li>
-        <li><a className='bg-teal-600 px-2 py-1 rounded font-bold' href='/logout/'>Logout</a></li>
+        <li className='my-4'><a className='bg-teal-600 px-2 py-1 rounded font-bold' href='http:localhost:8080/login'>Login</a></li>
+        <li><a className='bg-teal-600 px-2 py-1 rounded font-bold' href='http:localhost:8080/logout'>Logout</a></li>
       </ul>
       </div>
 

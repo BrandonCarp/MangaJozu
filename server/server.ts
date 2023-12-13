@@ -1,21 +1,30 @@
 import express, { NextFunction, Request, Response } from "express";
 import { AxiosResponse } from "axios";
-import authApp from './middleware/auth';
 // const axios = require('axios');
-
-
-
+import { OpenidRequest } from "express-openid-connect";
+const { auth } = require('express-openid-connect');
 require("dotenv").config();
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+import routes from './Routes/routes'
+
+
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: `${CLIENT_SECRET}`,
+  baseURL: `${process.env.BASEURL}`,
+  clientID: 'EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa',
+  issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com'
+};
+
 
 
 
 const app: express.Application = express();
-
-
-
-
+app.use(auth(config));
 app.use(
   cors({
     origin: ["http://localhost:3000"],
@@ -24,13 +33,19 @@ app.use(
   })
 );
 
+app.use('/', routes);
+
+app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+})
+
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
   res.setHeader("Cross-Origin-Resource-Policy", "same-site");
   next();
 });
 
-app.use(authApp);
+
 
 app.listen(DEV_PORT, () => {
   console.log(`Server working on on http://localhost:${DEV_PORT}`);

@@ -2,12 +2,14 @@ import {Request, Response} from 'express';
 const express = require('express');
 const router = express.Router();
 
-router.get(`/`, (req: Request & {oidc: any}, res: Response) => {
+import { OpenidRequest } from "express-openid-connect";
+
+router.get(`/`, (req: Request, res: Response) => {
   console.log(req.oidc.isAuthenticated());
-  res.render(`index`, {title: `Express Demo`});
+ 
 })
 
-module.exports = router;
+export default router;
 
 
 // Examples below route folder
