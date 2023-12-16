@@ -33,7 +33,15 @@ app.use(
   })
 );
 
-app.use('/', routes);
+const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+  if (req.oidc.isAuthenticated()) {
+    return next();
+  } else {
+    return res.redirect('/login')
+  }
+}
+
+app.use('/', checkAuth, routes);
 
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
