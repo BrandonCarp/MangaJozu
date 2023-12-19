@@ -21,8 +21,6 @@ const config = {
 };
 
 
-
-
 const app: express.Application = express();
 app.use(auth(config));
 app.use(

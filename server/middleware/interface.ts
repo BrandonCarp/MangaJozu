@@ -20,6 +20,7 @@ export interface AnimeListResponse {
 
 
 export  interface CustomerDetails {
+  userId: string;
   userName: string;
   email: string;
   password: string;

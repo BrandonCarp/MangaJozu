@@ -6,6 +6,11 @@ import { OpenidRequest } from "express-openid-connect";
 
 router.get(`/`, (req: Request, res: Response) => {
   console.log(req.oidc.isAuthenticated());
+  if(req.oidc && req.oidc.user) {
+    console.log(req.oidc.user.sub)
+    // const userId = req.oidc.user.sub;
+  }
+
  
 })
 
