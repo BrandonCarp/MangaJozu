@@ -4,10 +4,12 @@ const router = express.Router();
 
 import { OpenidRequest } from "express-openid-connect";
 
-router.get(`/`, (req: Request, res: Response) => {
+router.get(`/`, async (req: Request, res: Response) => {
   console.log(req.oidc.isAuthenticated());
   if(req.oidc && req.oidc.user) {
     console.log(req.oidc.user.sub)
+    const userInfo = await req.oidc.fetchUserInfo();
+    console.log(userInfo);
     // const userId = req.oidc.user.sub;
   }
 

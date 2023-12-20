@@ -17,7 +17,11 @@ const config = {
   secret: `${CLIENT_SECRET}`,
   baseURL: `${process.env.BASEURL}`,
   clientID: 'EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa',
-  issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com'
+  issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com',
+  authorizationParams: {
+    response_type: 'code id_token',
+    scope: 'openid profile', 
+  },
 };
 
 
