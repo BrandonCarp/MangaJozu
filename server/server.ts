@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   if (req.oidc.isAuthenticated()) {
     return next();
   } else {
