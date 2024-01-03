@@ -1,67 +1,59 @@
 import prisma from "../prisma/client";
-import { CustomerDetails } from "../middleware/interface";
+import {  userDetails } from "../middleware/interface";
 
-async function createCustomer ({userId, userName, email, password, firstName, lastName}: CustomerDetails) {
+async function createUser ({userName, email}: userDetails) {
 
   try {
 
-    if (!userName || !email || !password || !firstName || !lastName) {
-      throw new Error('Incomplete customer details');  
+    if (!userName || !email) {
+      throw new Error('Incomplete user details');  
     }
 
     const createdUser = await prisma.customer.create({
       data: {
-    id : userId,
      userName: userName,
      email: email,
-     password: password,
-     firstName: firstName,
-     lastName: lastName
       } 
        })
 console.log(createdUser)
   } catch (error) {
-    console.log(`Error creating customer:`, error)
+    console.log(`Error creating user:`, error)
   }
   
 }
 
 
-async function deleteUser({userId}: CustomerDetails) {
+async function deleteUser({email}: userDetails) {
   try {
       const deletedUser =  await prisma.customer.delete({
         where: {
-        id: userId
+        email: email
         },
       })
       console.log(`Deleted user`, deletedUser)
   } catch (error){
-    console.log(`Error creating customer:`, error)
+    console.log(`Error creating user:`, error)
   }
 }
 
-async function updateUser({userId, userName, email, password, firstName, lastName}: CustomerDetails) {
+async function updateUser({ userName, email}: userDetails) {
  try {
    const updatedUser = await prisma.customer.update({
     where: {
-      id: userId
+     email: email
     },
     data: {
       userName: userName,
-      email: email,
-      password: password,
-      firstName: firstName,
-      lastName: lastName
     }
    })
-   console.log(`Updated User`, updatedUser)
+   console.log(`Updated Username`, updatedUser)
 } catch (error){
-  console.log(`Error updating customer:`, error)
+  console.log(`Error updating user name:`, error)
 }
 }
 
 module.exports = {
-createCustomer,
+createUser,
 deleteUser,
 updateUser
 }

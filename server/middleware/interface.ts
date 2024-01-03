@@ -19,12 +19,9 @@ export interface AnimeListResponse {
 }
 
 
-export  interface CustomerDetails {
+export  interface userDetails {
   userId: string;
   userName: string;
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
  }
 
