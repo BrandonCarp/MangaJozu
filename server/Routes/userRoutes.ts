@@ -7,8 +7,8 @@ const {
 deleteUser,
 updateUser
 } = require('../controllers/createCustomer')
-
-
+// Notes
+// Think of remaining needed additions on backend / store ? Comments ? 
 const router = express.router();
 
 router.post("/createUser",  createUser)
