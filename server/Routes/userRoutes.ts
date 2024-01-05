@@ -9,7 +9,8 @@ updateUser
 } = require('../controllers/createCustomer')
 // Notes
 // Think of remaining needed additions on backend / store ? Comments ? 
-const router = express.router();
+// Run tests ie: JEST
+const router = express.Router();
 
 router.post("/createUser",  createUser)
 router.post("/deleteUser", checkAuth, deleteUser)
