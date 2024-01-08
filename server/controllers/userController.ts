@@ -52,10 +52,21 @@ async function updateUser({ userName, email}: userDetails) {
 }
 }
 
+async function FindUser() {
+  try {
+    const allUsers = await prisma.customer.findMany();
+    console.log(`All Users`, allUsers)
+ } catch (error){
+   console.log(`Error Finding`, error)
+ }
+ }
+ https://www.youtube.com/watch?v=r5L1XRZaCR0 - 9:11 
+//  Connect new users to DB
 module.exports = {
 createUser,
 deleteUser,
-updateUser
+updateUser,
+FindUser
 }
 // create multiple functions for adding/delete/updating users
 // including update address/information - potentially different file
