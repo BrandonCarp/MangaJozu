@@ -1,12 +1,12 @@
 
 
-describe('product', () => {
+describe('user', () => {
 
   // Whats getting tested
-  describe('get product route', () => {
+  describe('get all users route', () => {
 
     // Under what condition
-      describe('given the product does not exist ', () => {
+      describe('given the user does not exist ', () => {
 // It Should
         it('should return a 404', () => {
 expect(true).toBe(true);
