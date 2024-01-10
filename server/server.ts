@@ -43,11 +43,22 @@ export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+
+
 app.use('/', checkAuth, routes);
+
+// app.get('/signup', async (req, res) => {
+//   try {
+//    res.send('SIGN UP woo !')
+//   } catch (error) {
+//     console.error(`Error during signup`, error)
+//   }
+// })
 
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 })
+
 
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
