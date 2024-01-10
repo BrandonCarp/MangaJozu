@@ -1,16 +1,16 @@
 import prisma from "../prisma/client";
 import {  userDetails } from "../middleware/interface";
 
-async function createUser ({userName, email}: userDetails) {
+async function createUser ({userName, email, auth0Id}: userDetails) {
 
   try {
 
     if (!userName || !email) {
       throw new Error('Incomplete user details');  
-    }
-
+    } 
     const createdUser = await prisma.customer.create({
       data: {
+        auth0Id: auth0Id,
      userName: userName,
      email: email,
       } 
@@ -23,11 +23,11 @@ console.log(createdUser)
 }
 
 
-async function deleteUser({email}: userDetails) {
+async function deleteUser({auth0Id}: userDetails) {
   try {
       const deletedUser =  await prisma.customer.delete({
         where: {
-        email: email
+        auth0Id: auth0Id
         },
       })
       console.log(`Deleted user`, deletedUser)
@@ -36,11 +36,11 @@ async function deleteUser({email}: userDetails) {
   }
 }
 
-async function updateUser({ userName, email}: userDetails) {
+async function updateUser({ userName, auth0Id}: userDetails) {
  try {
    const updatedUser = await prisma.customer.update({
     where: {
-     email: email
+     auth0Id: auth0Id
     },
     data: {
       userName: userName,

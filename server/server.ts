@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import prisma from "./prisma/client";
 import { AxiosResponse } from "axios";
 // const axios = require('axios');
 import { OpenidRequest } from "express-openid-connect";
@@ -8,6 +9,7 @@ const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 import routes from './Routes/routes'
+import { userInfo } from "os";
 
 
 
@@ -58,6 +60,33 @@ app.use('/', checkAuth, routes);
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 })
+
+app.get('/callback', async (res, req) => {
+     console.log(req.oidc)
+     
+try {
+  
+    const sub = req.oidc.;
+    const existingUser = await prisma.customer.findFirst({auth0Id: sub});
+
+  
+} catch (error) {
+      console.error(`Error`)
+     }
+ })
+
+// router.get(`/`, async (req: Request, res: Response) => {
+//   console.log(req.oidc.isAuthenticated());
+//   if(req.oidc && req.oidc.user) {
+//     console.log(req.oidc.user.sub)
+//     const userInfo = await req.oidc.fetchUserInfo();
+//     console.log(userInfo);
+//     // const userId = req.oidc.user.sub;
+//   }
+
+ 
+// })
+
 
 
 
