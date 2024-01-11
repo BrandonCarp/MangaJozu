@@ -3,13 +3,7 @@ import prisma from "../prisma/client";
 import {  userDetails } from "../middleware/interface";
 
 async function createUser ({auth0Id, userName, email}: userDetails) {
-
-  try {
-
-    if (!userName || !email) {
-      throw new Error('Incomplete user details');  
-    } 
-    
+try {
     const createdUser = await prisma.customer.create({
       data: {
         auth0Id: auth0Id,
@@ -26,31 +20,27 @@ console.log(createdUser)
 
 export async function handleAuthCallBack( {auth0Id, userName, email}: userDetails,req: Request, res: Response, ){
   try {
-  console.log(req.oidc)
+  // console.log(req.oidc)
   // const sub = req.oidc?.user?.sub;
-  const userInfo  = {
-    auth0Id : req.oidc?.user?.sub,
-    userName: req.oidc?.user?.nickName,
-    email: req.oidc?.user?.name
-   }
+  // const userInfo  = {
+  //   auth0Id : req.oidc?.user?.sub,
+  //   userName: req.oidc?.user?.nickName,
+  //   email: req.oidc?.user?.name
+  //  }
 
-  if(!userInfo.auth0Id) {
-    console.error('Unable to retrieve user sub from Auth0 Callback')
-    return res.status(500).send('Internal Server Error');
-  }
   const existingUser = await prisma.customer.findFirst({
     where: {
-      auth0Id: userInfo.auth0Id
+      auth0Id: auth0Id
     },
     
   })
   if(existingUser) {
     console.log('Existing user logged in:', existingUser);
-  } else {
+  } else {              
    
-   await createUser({auth0Id: userInfo.auth0Id,
-    userName: userInfo.userName,
-    email: userInfo.email,})
+   await createUser({auth0Id: auth0Id,
+    userName: userName,
+    email: email,})
   }
   } catch(error){
     console.error(error)

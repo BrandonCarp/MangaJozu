@@ -47,7 +47,7 @@ export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-
+// Have to connect auth0 to my db while also deleting that user from auth0 when deleting from db!!
 
 app.use('/', checkAuth, routes);
 
@@ -67,9 +67,12 @@ app.get('/callback', async (req, res) => {
      console.log(req.oidc)
      
 try {
-  await handleAuthCallBack;
-
-  
+  const {auth0Id, userName, email} = req.oidc?.user || {};
+if(!auth0Id) {
+  console.log(`Unable to retrieve user sub from Auth0 Callback`);
+  return res.status(500).send("Internal Server Error")
+}
+await handleAuthCallBack({ auth0Id, userName, email }, req, res);
 } catch (error) {
       console.error(`Error`)
      }
