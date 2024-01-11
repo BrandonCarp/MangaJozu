@@ -21,7 +21,6 @@ export interface AnimeListResponse {
 
 export  interface userDetails {
   auth0Id: string;
-  userId: string;
   userName: string;
   email: string;
  }

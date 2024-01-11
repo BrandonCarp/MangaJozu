@@ -4,6 +4,7 @@ const express = require('express');
 
 const {
   createUser,
+  handleAuthCallBack,
 deleteUser,
 updateUser
 } = require('../controllers/createCustomer')
@@ -12,6 +13,7 @@ updateUser
 // Run tests ie: JEST
 const router = express.Router();
 
+router.post("/callback", handleAuthCallBack)
 router.post("/createUser",  createUser)
 router.post("/deleteUser", checkAuth, deleteUser)
 router.post("/updateUser", checkAuth, updateUser)

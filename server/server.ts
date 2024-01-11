@@ -9,7 +9,9 @@ const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 import routes from './Routes/routes'
-import { userInfo } from "os";
+import {handleAuthCallBack} from './controllers/userController'
+
+
 
 
 
@@ -61,13 +63,11 @@ app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 })
 
-app.get('/callback', async (res, req) => {
+app.get('/callback', async (req, res) => {
      console.log(req.oidc)
      
 try {
-  
-    const sub = req.oidc.;
-    const existingUser = await prisma.customer.findFirst({auth0Id: sub});
+  await handleAuthCallBack;
 
   
 } catch (error) {
