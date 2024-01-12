@@ -8,8 +8,7 @@ require("dotenv").config();
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-import routes from './Routes/routes'
-import {handleAuthCallBack} from './controllers/userController'
+
 
 
 
@@ -30,6 +29,7 @@ const config = {
 
 
 const app: express.Application = express();
+// auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 app.use(
   cors({
@@ -39,6 +39,14 @@ app.use(
   })
 );
 
+app.set("view engine", "ejs");
+
+app.use(express.urlencoded({ extended: true }));
+
+
+
+//  Endpoints
+
 export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   if (req.oidc.isAuthenticated()) {
     return next();
@@ -47,51 +55,133 @@ export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-// Have to connect auth0 to my db while also deleting that user from auth0 when deleting from db!!
-
-app.use('/', checkAuth, routes);
-
-// app.get('/signup', async (req, res) => {
-//   try {
-//    res.send('SIGN UP woo !')
-//   } catch (error) {
-//     console.error(`Error during signup`, error)
-//   }
-// })
-
-app.get('/', (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-})
-
-app.get('/callback', async (req, res) => {
-     console.log(req.oidc)
-     
-try {
-  const {auth0Id, userName, email} = req.oidc?.user || {};
-if(!auth0Id) {
-  console.log(`Unable to retrieve user sub from Auth0 Callback`);
-  return res.status(500).send("Internal Server Error")
-}
-await handleAuthCallBack({ auth0Id, userName, email }, req, res);
-} catch (error) {
-      console.error(`Error`)
-     }
- })
-
-// router.get(`/`, async (req: Request, res: Response) => {
-//   console.log(req.oidc.isAuthenticated());
-//   if(req.oidc && req.oidc.user) {
-//     console.log(req.oidc.user.sub)
-//     const userInfo = await req.oidc.fetchUserInfo();
-//     console.log(userInfo);
-//     // const userId = req.oidc.user.sub;
-//   }
-
  
-// })
+
+
+// app.use('/', checkAuth, routes);
+
+
+// req.isAuthenticated is provided from the auth router
+app.get("/", (req, res) => {
+  console.log(req.oidc.isAuthenticated());
+  const isAuthenticated = req.oidc.isAuthenticated();
+  const response = isAuthenticated ? req.oidc.user : "Not logged in";
+  res.send(response);
+});
+// dont touch above
+
+// GO OVER BELOW AND UNDERSTAND
+
+// ... middleware and configuration ...
+
+// app.get("/", async (req: Request, res: Response) => {
+//   try {
+//     console.log(req.oidc.isAuthenticated());
+//     const isAuthenticated = req.oidc.isAuthenticated();
+    
+//     if (isAuthenticated) {
+//       // If authenticated, you can access user information from req.oidc.user
+//       const user = req.oidc.user;
+
+//       // Assuming you have a 'users' table in your database
+//       // and you want to store or retrieve data based on the user
+//       const existingUser = await prisma.user.findUnique({
+//         where: {
+//           // Adjust the condition based on your user data and database schema
+//           id: user.sub, // Assuming user ID is stored in 'sub'
+//         },
+//       });
+
+//       if (existingUser) {
+//         // User exists in the database, you can perform operations
+//         // or retrieve data associated with the user
+//         console.log("User exists in the database:", existingUser);
+//       } else {
+//         // User does not exist, you can insert the user into the database
+//         await prisma.user.create({
+//           data: {
+//             // Adjust the data fields based on your user schema
+//             id: user.sub,
+//             username: user.nickname,
+//             // ... other user data ...
+//           },
+//         });
+//         console.log("User inserted into the database");
+//       }
+//     }
+
+//     res.send(isAuthenticated ? req.oidc.user : "Not logged in");
+//   } catch (error) {
+//     console.error("Error handling request:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+// // ... other routes and server setup ...
+
+
+// // Middleware to check if the user is authenticated
+// const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+//   if (req.oidc.isAuthenticated()) {
+//     return next();
+//   } else {
+//     return res.redirect('/login');
+//   }
+// };
+
+// // Route for the home page
+// app.get("/", checkAuth, async (req: Request, res: Response) => {
+//   try {
+//     const isAuthenticated = req.oidc.isAuthenticated();
+    
+//     if (isAuthenticated) {
+//       const user = req.oidc.user;
+
+//       const existingUser = await prisma.user.findUnique({
+//         where: {
+//           id: user.sub,
+//         },
+//       });
+
+//       if (existingUser) {
+//         console.log("User exists in the database:", existingUser);
+//       } else {
+//         await prisma.user.create({
+//           data: {
+//             id: user.sub,
+//             username: user.nickname,
+//           },
+//         });
+//         console.log("User inserted into the database");
+//       }
+//     }
+
+//     res.send(isAuthenticated ? req.oidc.user : "Not logged in");
+//   } catch (error) {
+//     console.error("Error handling request:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+// // Route to display user profile (requires authentication)
+// app.get("/profile", checkAuth, (req: Request, res: Response) => {
+//   res.render("profile", { user: req.oidc.user });
+// });
+
+// // Route to handle user logout
+// app.get("/logout", (req: Request, res: Response) => {
+//   req.logout(); // Provided by express-openid-connect for logging out
+//   res.redirect('/');
+// });
 
 
 
+
+
+
+
+
+// Dont touch below
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
   res.setHeader("Cross-Origin-Resource-Policy", "same-site");
@@ -103,15 +193,6 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
 app.listen(DEV_PORT, () => {
   console.log(`Server working on on http://localhost:${DEV_PORT}`);
 });
-
-
-
-
-// Get user profile information - 
-//  https://manage.auth0.com/dashboard/us/dev-7hi6cohckgtzdhik/applications/EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa/quickstart/express/steps/4
-// app.get('/profile', auth(), (req, res) => {
-//   res.send(JSON.stringify(req.oidc.user));
-// });
 
 
 
