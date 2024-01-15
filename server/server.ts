@@ -8,6 +8,7 @@ require("dotenv").config();
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
+import { userDetails } from "./middleware/interface";
 
 
 
@@ -74,48 +75,48 @@ app.get("/", (req, res) => {
 
 // ... middleware and configuration ...
 
-// app.get("/", async (req: Request, res: Response) => {
-//   try {
-//     console.log(req.oidc.isAuthenticated());
-//     const isAuthenticated = req.oidc.isAuthenticated();
+app.get("/", async (req: Request, res: Response) => {
+  try {
+    console.log(req.oidc.isAuthenticated());
+    const isAuthenticated = req.oidc.isAuthenticated();
     
-//     if (isAuthenticated) {
-//       // If authenticated, you can access user information from req.oidc.user
-//       const user = req.oidc.user;
+    if (isAuthenticated) {
+      // If authenticated, you can access user information from req.oidc.user
+      const user  = req.oidc.user;
 
-//       // Assuming you have a 'users' table in your database
-//       // and you want to store or retrieve data based on the user
-//       const existingUser = await prisma.user.findUnique({
-//         where: {
-//           // Adjust the condition based on your user data and database schema
-//           id: user.sub, // Assuming user ID is stored in 'sub'
-//         },
-//       });
+      // Assuming you have a 'users' table in your database
+      // and you want to store or retrieve data based on the user
+      const existingUser = await prisma.customer.findUnique({
+        where: {
+          // Adjust the condition based on your user data and database schema
+          auth0Id: user.sub, // Assuming user ID is stored in 'sub'
+        },
+      });
 
-//       if (existingUser) {
-//         // User exists in the database, you can perform operations
-//         // or retrieve data associated with the user
-//         console.log("User exists in the database:", existingUser);
-//       } else {
-//         // User does not exist, you can insert the user into the database
-//         await prisma.user.create({
-//           data: {
-//             // Adjust the data fields based on your user schema
-//             id: user.sub,
-//             username: user.nickname,
-//             // ... other user data ...
-//           },
-//         });
-//         console.log("User inserted into the database");
-//       }
-//     }
+      if (existingUser) {
+        // User exists in the database, you can perform operations
+        // or retrieve data associated with the user
+        console.log("User exists in the database:", existingUser);
+      } else {
+        // User does not exist, you can insert the user into the database
+        await prisma.customer.create({
+          data:  {
+            // Adjust the data fields based on your user schema
+            auth0Id: user.sub,
+            userName: user.nickname,
+            // ... other user data ...
+          },
+        });
+        console.log("User inserted into the database");
+      }
+    }
 
-//     res.send(isAuthenticated ? req.oidc.user : "Not logged in");
-//   } catch (error) {
-//     console.error("Error handling request:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+    res.send(isAuthenticated ? req.oidc.user : "Not logged in");
+  } catch (error) {
+    console.error("Error handling request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // // ... other routes and server setup ...
 
