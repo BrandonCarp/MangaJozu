@@ -1,21 +1,13 @@
-import { checkAuth } from "../server";
+import { Router } from 'express';
 
-const express = require('express');
+import { createUser, deleteUser, updateUser } from '../controllers/userController';
+import { checkAuth } from '../server';
 
-const {
-  createUser,
-  handleAuthCallBack,
-deleteUser,
-updateUser
-} = require('../controllers/createCustomer')
-// Notes
-// Think of remaining needed additions on backend / store ? Comments ? 
-// Run tests ie: JEST
-const router = express.Router();
+const router = Router();
 
-router.post("/callback", handleAuthCallBack)
-router.post("/createUser",  createUser)
-router.post("/deleteUser", checkAuth, deleteUser)
-router.post("/updateUser", checkAuth, updateUser)
 
-module.exports = router;
+router.post("/createUser", createUser);
+router.post("/deleteUser", checkAuth, deleteUser);
+router.post("/updateUser", checkAuth, updateUser);
+
+export default router;

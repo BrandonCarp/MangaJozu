@@ -1,8 +1,11 @@
-import { Request, Response } from "express";
 import prisma from "../prisma/client";
 import {  userDetails } from "../middleware/interface";
+import axios from "axios";
+const MANAGEMENT_TOKEN = process.env.MANAGEMENT_TOKEN;
+const AUTH0_API_URL = process.env.AUTH0_API_URL;
 
-async function createUser ({auth0Id, userName, email}: userDetails) {
+
+export  async function createUser ({auth0Id, userName, email}: userDetails) {
 try {
     const createdUser = await prisma.customer.create({
       data: {
@@ -18,51 +21,34 @@ console.log(createdUser)
   
 }
 
-export async function handleAuthCallBack( {auth0Id, userName, email}: userDetails,req: Request, res: Response, ){
-  try {
-  // console.log(req.oidc)
-  // const sub = req.oidc?.user?.sub;
-  // const userInfo  = {
-  //   auth0Id : req.oidc?.user?.sub,
-  //   userName: req.oidc?.user?.nickName,
-  //   email: req.oidc?.user?.name
-  //  }
 
-  const existingUser = await prisma.customer.findFirst({
-    where: {
-      auth0Id: auth0Id
-    },
-    
-  })
-  if(existingUser) {
-    console.log('Existing user logged in:', existingUser);
-  } else {              
-   
-   await createUser({auth0Id: auth0Id,
-    userName: userName,
-    email: email,})
+
+export async function deleteUser({auth0Id}: userDetails) {
+  try {
+    const auth0ApiUrl = `${AUTH0_API_URL}${auth0Id}` 
+    const deleteUserPrisma = await prisma.customer.delete({
+      where: {
+        auth0Id: auth0Id,
+      },
+    });
+const response = await axios.delete(auth0ApiUrl, {
+  headers:  {
+    Authorization: `Bearer ${MANAGEMENT_TOKEN}`
   }
-  } catch(error){
-    console.error(error)
-  }
+});
+if (response.status !== 204) {
+  throw new Error(`Failed to delete user from Auth0. Status code: ${response.status}`);
 }
-
-
-
-async function deleteUser({auth0Id}: userDetails) {
-  try {
-      const deletedUser =  await prisma.customer.delete({
-        where: {
-        auth0Id: auth0Id
-        },
-      })
-      console.log(`Deleted user`, deletedUser)
+      console.log(`Deleted user from Postgresql`, deleteUserPrisma);
+      console.log(`Deleted user from Auth0`, response.data);
   } catch (error){
-    console.log(`Error creating user:`, error)
+    console.log(`Error deleting user:`, error)
   }
 }
 
-async function updateUser({ userName, auth0Id}: userDetails) {
+
+
+export async function updateUser({ userName, auth0Id}: userDetails) {
  try {
    const updatedUser = await prisma.customer.update({
     where: {
@@ -78,7 +64,7 @@ async function updateUser({ userName, auth0Id}: userDetails) {
 }
 }
 
-async function FindUser() {
+export async function FindUser() {
   try {
     const allUsers = await prisma.customer.findMany();
     console.log(`All Users`, allUsers)
@@ -86,14 +72,3 @@ async function FindUser() {
    console.log(`Error Finding`, error)
  }
  }
- https://www.youtube.com/watch?v=r5L1XRZaCR0 - 9:11 
-//  Connect new users to DB
-module.exports = {
-createUser,
-deleteUser,
-updateUser,
-FindUser
-};
-// create multiple functions for adding/delete/updating users
-// including update address/information - potentially different file
-// 12/18/23   - Create a delete function & a edit function
