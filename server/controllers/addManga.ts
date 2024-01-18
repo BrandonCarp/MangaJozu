@@ -5,8 +5,17 @@ import { AnimeListItem } from "../middleware/interface";
 import prisma from "../prisma/client";
 
 
-
-
+// https://api.jikan.moe/v4/anime
+// {
+  // "pagination": {
+  //   "last_visible_page": 1045,
+  //   "has_next_page": true,
+  //   "current_page": 1,
+  //   "items": {
+  //       "count": 25,
+  //       "total": 26113,
+  //       "per_page": 25
+  //   }
 const formatAnime = ({title_english, synopsis, images, aired, trailer }: AnimeListItem) => {
 
   return {

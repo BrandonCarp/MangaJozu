@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import prisma from "./prisma/client";
-import { AxiosResponse } from "axios";
-// const axios = require('axios');
+
 import { OpenidRequest } from "express-openid-connect";
 const { auth } = require('express-openid-connect');
 require("dotenv").config();
@@ -10,12 +9,7 @@ const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const MANAGEMENT_TOKEN = process.env.MANAGEMENT_TOKEN;
 const AUTH0_API_URL = process.env.AUTH0_API_URL;
-import { userDetails } from "./middleware/interface";
 import { createUser, deleteUser, updateUser } from "./controllers/userController";
-
-
-
-
 
 
 
@@ -117,19 +111,10 @@ app.get("/delete", async (req, res) => {
    }
 })
 
-
-
-
-
-
-
-
-
 app.use(function (req: Request, res: Response, next: NextFunction) {
   res.setHeader("Cross-Origin-Resource-Policy", "same-site");
   next();
 });
-
 
 
 app.listen(DEV_PORT, () => {
