@@ -2,7 +2,7 @@ import prisma from "../prisma/client";
 import {  userDetails } from "../middleware/interface";
 
 
-
+// figure out what to add 
 export  async function createUser ({auth0Id, userName, email}: userDetails) {
 try {
     const createdUser = await prisma.customer.create({
