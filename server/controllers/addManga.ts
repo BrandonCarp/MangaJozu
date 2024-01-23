@@ -4,6 +4,11 @@ const axios = require('axios');
 import { AnimeListItem } from "../middleware/interface";
 import prisma from "../prisma/client";
 
+// Notes 1/22/24
+// Have to update the url fetching from to take in new page to fetch ie : pagination
+// Update existing anime function
+// Function to create below
+// check if in db first depending on page, if not fetch from new page
 
 // https://api.jikan.moe/v4/anime
 // {
@@ -16,6 +21,7 @@ import prisma from "../prisma/client";
   //       "total": 26113,
   //       "per_page": 25
   //   }
+
 const formatAnime = ({title_english, synopsis, images, aired, trailer }: AnimeListItem) => {
 
   return {
