@@ -123,8 +123,8 @@ app.get("/delete", async (req, res) => {
 // Use state on frontend to keep track of page to send
 
 
-app.get(["/anime"], async (req: Request, res: Response) => {
- const pageNum: string | undefined = req.query.q as string | undefined;
+app.get(["/anime"], async ( req: Request, res: Response) => {
+ const pageNum:  string | undefined = req.query.q as string | undefined;
 try {
   const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${pageNum}`);
   res.send(animeResult);
