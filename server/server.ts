@@ -1,15 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
 import prisma from "./prisma/client";
-
 import { OpenidRequest } from "express-openid-connect";
+import { createUser, deleteUser, updateUser } from "./controllers/userController";
+import { fetchAnime} from "./controllers/mangaController";
+
 const { auth } = require('express-openid-connect');
 require("dotenv").config();
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const MANAGEMENT_TOKEN = process.env.MANAGEMENT_TOKEN;
-const AUTH0_API_URL = process.env.AUTH0_API_URL;
-import { createUser, deleteUser, updateUser } from "./controllers/userController";
+// const MANAGEMENT_TOKEN = process.env.MANAGEMENT_TOKEN;
+// const AUTH0_API_URL = process.env.AUTH0_API_URL;
+
 
 
 
@@ -43,6 +45,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 
+// User Code
 
 
 export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -111,6 +114,59 @@ app.get("/delete", async (req, res) => {
    }
 })
 
+
+// Anime Code
+
+
+// front end precalls /anime on the anime pages , onClick adjust page
+// when using search function anime calls /search
+// Use state on frontend to keep track of page to send
+
+
+app.get(["/anime"], async (req: Request, res: Response) => {
+ const pageNum: string | undefined = req.query.q as string | undefined;
+try {
+  const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${pageNum}`);
+  res.send(animeResult);
+} catch (error) {
+console.error(error);
+}
+});
+
+
+app.get(["/anime/search"], async (req: Request, res: Response) => {
+ const animeTitle : string | undefined = req.query.q as string | undefined;
+
+ try{
+  const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${animeTitle}`);
+      res.send(animeResult)
+ } catch (error) {
+  console.error(error)
+ }
+});
+
+
+app.get(["/anime/recommend"], async (req: Request, res: Response) => {
+ 
+  try{
+   const animeResult = await fetchAnime(`https://api.jikan.moe/v4/recommendations/anime`);
+       res.send(animeResult)
+  } catch (error) {
+   console.error(error)
+  }
+ });
+
+ app.get(["/anime/top"], async (req: Request, res: Response) => {
+ 
+  try{
+   const animeResult = await fetchAnime(`https://api.jikan.moe/v4/top/anime`);
+       res.send(animeResult)
+  } catch (error) {
+   console.error(error)
+  }
+ });
+
+
 app.use(function (req: Request, res: Response, next: NextFunction) {
   res.setHeader("Cross-Origin-Resource-Policy", "same-site");
   next();
@@ -121,40 +177,4 @@ app.listen(DEV_PORT, () => {
   console.log(`Server working on on http://localhost:${DEV_PORT}`);
 });
 
-
-
-
-
-
-
-// Relocate below code soon
-
-
-// app.get("/api/home", (req: Request, res: Response) => {
-//   res.json({ message: "Backend Api Recieved" });
-// });
-
-
-
-// app.get(["/manga/search"], (req: Request, res: Response) => {
-//   axios.get(fetchManga)
-//     .then(function (Response: AxiosResponse) {
-//       res.send(Response.data)
-//       console.log(Response.data.data.title);
-//     }).catch(function (error: Error) {
-//       res.send(error);
-//       console.log(error);
-//     })
-// });
-
-// app.get(["/manga/berserk"], (req: Request, res: Response) => {
-//   axios.get(fetchBerserk)
-//     .then(function (Response: AxiosResponse) {
-//       res.send(Response.data)
-//       console.log(Response.data.data.title);
-//     }).catch(function (error: Error) {
-//       res.send(error);
-//       console.log(error);
-//     })
-// });
 

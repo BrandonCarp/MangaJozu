@@ -16,7 +16,6 @@ console.log(createdUser)
   } catch (error) {
     console.log(`Error creating user:`, error)
   }
-  
 }
 
 export async function deleteUser(auth0Id: string) {
