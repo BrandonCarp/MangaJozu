@@ -3,49 +3,59 @@ import prisma from "./prisma/client";
 import { OpenidRequest } from "express-openid-connect";
 import { createUser, deleteUser, updateUser } from "./controllers/userController";
 import { fetchAnime} from "./controllers/mangaController";
+// import { createServer } from "./utils/app";
 
-const { auth } = require('express-openid-connect');
 require("dotenv").config();
+
+// require("dotenv").config();
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-// const MANAGEMENT_TOKEN = process.env.MANAGEMENT_TOKEN;
-// const AUTH0_API_URL = process.env.AUTH0_API_URL;
+const { auth } = require('express-openid-connect');
+
+
+
+// const app = createServer();
 
 
 
 
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: `${CLIENT_SECRET}`,
-  baseURL: `${process.env.BASEURL}`,
-  clientID: 'EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa',
-  issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com',
-  authorizationParams: {
-    response_type: 'code id_token',
-    scope: 'openid profile', 
-  },
-};
+  const config = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: `${CLIENT_SECRET}`,
+    baseURL: `${process.env.BASEURL}`,
+    clientID: 'EZ75F35tGfx6RNVNWXzQuyz0iai4t0Oa',
+    issuerBaseURL: 'https://dev-7hi6cohckgtzdhik.us.auth0.com',
+    authorizationParams: {
+      response_type: 'code id_token',
+      scope: 'openid profile', 
+    },
+  };
+  
+  
+   export const app: express.Application = express();
+  // auth router attaches /login, /logout, and /callback routes to the baseURL
+  app.use(auth(config));
+  app.use(
+    cors({
+      origin: ["http://localhost:3000"],
+      methods: ["GET", "POST", "OPTIONS"],
+      allowedHeaders: ["Content-Type"],
+    })
+  );
+  
+  app.set("view engine", "ejs");
+  
+  app.use(express.urlencoded({ extended: true }));
+  
 
 
-const app: express.Application = express();
-// auth router attaches /login, /logout, and /callback routes to the baseURL
-app.use(auth(config));
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
-
-app.set("view engine", "ejs");
-
-app.use(express.urlencoded({ extended: true }));
 
 
-// User Code
+
+
+
 
 
 export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -118,34 +128,35 @@ app.get("/delete", async (req, res) => {
 // Anime Code
 
 
-// front end precalls /anime on the anime pages , onClick adjust page
-// when using search function anime calls /search
-// Use state on frontend to keep track of page to send
-
-
+// general anime pages
 app.get(["/anime"], async ( req: Request, res: Response) => {
- const pageNum:  string | undefined = req.query.q as string | undefined;
+ const pageNum = req.query.q as string | undefined;
 try {
   const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${pageNum}`);
   res.send(animeResult);
 } catch (error) {
-console.error(error);
+console.error(`This is a /anime error:`, error);
+res.status(404).json({ error: 'Not Found', message: 'Resource not found' });
 }
 });
 
 
+
+
+// anime search endpoint
 app.get(["/anime/search"], async (req: Request, res: Response) => {
- const animeTitle : string | undefined = req.query.q as string | undefined;
+ const animeTitle = req.query.q as string | undefined;
 
  try{
-  const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${animeTitle}`);
+  const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?q=${animeTitle}`);
       res.send(animeResult)
  } catch (error) {
-  console.error(error)
- }
+  console.error(`This is a /anime error:`, error);
+
+}
 });
 
-
+// recommended anime endpoint
 app.get(["/anime/recommend"], async (req: Request, res: Response) => {
  
   try{
@@ -156,6 +167,8 @@ app.get(["/anime/recommend"], async (req: Request, res: Response) => {
   }
  });
 
+
+//  top anime endpoint
  app.get(["/anime/top"], async (req: Request, res: Response) => {
  
   try{
