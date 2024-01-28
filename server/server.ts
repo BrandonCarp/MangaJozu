@@ -32,7 +32,8 @@ const { auth } = require('express-openid-connect');
       scope: 'openid profile', 
     },
   };
-  
+
+
   
    export const app: express.Application = express();
   // auth router attaches /login, /logout, and /callback routes to the baseURL
@@ -130,16 +131,19 @@ app.get("/delete", async (req, res) => {
 
 // general anime pages
 app.get(["/anime"], async ( req: Request, res: Response) => {
- const pageNum = req.query.q as string | undefined;
-try {
-  const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${pageNum}`);
-  res.send(animeResult);
-} catch (error) {
-console.error(`This is a /anime error:`, error);
-res.status(404).json({ error: 'Not Found', message: 'Resource not found' });
-}
+  const pageNum = req.query.q as string | undefined;
+  try {
+    const animeResult = await fetchAnime(`https://api.jikan.moe/v4/anime?&limit=25&page=${pageNum}`);
+    if (animeResult) {
+      res.send(animeResult);
+    } else {
+      res.status(404).json({ error: 'Not Found', message: 'Resource not found' });
+    }
+  } catch (error) {
+    console.error(`This is a /anime error:`, error);
+    res.status(500).json({ error: 'Internal Server Error', message: 'An error occurred' });
+  }
 });
-
 
 
 

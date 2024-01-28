@@ -1,10 +1,11 @@
 import supertest = require("supertest");
 // import { createServer } from "../utils/app";
 import { app } from "../server";
-// const app = createServer();
 
 
-describe('anime', () => {
+
+
+describe('/anime', () => {
 
   // What is being tested
   describe('get anime route', () => {
@@ -13,11 +14,12 @@ describe('anime', () => {
     // TEST 1 DOESNT EXIST
  describe('given the anime does not exist', () => {
 
-  it('should return a 400', async () => {
+  it('should return a 404', async () => {
 
   // expect(true).toBe(true)
   const page = "f"
-  await supertest(app).get(`/anime?q=${page}`).expect(400);
+  const response = await supertest(app).get(`/anime?q=${page}`).expect(404);
+  
 })
  }),
 //  TEST 2 ANIME RETURNED
@@ -32,6 +34,10 @@ describe('anime', () => {
 
 })
  })
-
   })
+})
+
+// Test anime/search
+describe('/anime/search', () => {
+  
 })
