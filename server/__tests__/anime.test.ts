@@ -16,7 +16,7 @@ describe('/anime', () => {
 
   it('should return a 404', async () => {
 
-  // expect(true).toBe(true)
+  // expect(true).toBe(true) !!!
   const page = "f"
   const response = await supertest(app).get(`/anime?q=${page}`).expect(404);
   
@@ -36,8 +36,8 @@ describe('/anime', () => {
  })
   })
 })
-
+    
 // Test anime/search
 describe('/anime/search', () => {
-  
+
 })
