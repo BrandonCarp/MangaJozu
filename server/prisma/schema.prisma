@@ -33,16 +33,20 @@ model Anime {
   comments    Comment[]
 }
 
+// Comment Thoughts
+// always fetch existing comments to display under each anime
+// 
+
 model Comment {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   message    String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  customer   Customer  @relation(fields: [id], references: [auth0Id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [id], references: [auth0Id], onDelete: Cascade)
   customerId String
-  parent     Comment?  @relation("ParentChild", fields: [parentId], references: [id])
-  children   Comment[] @relation("ParentChild")
+  // parent     Comment?  @relation("ParentChild", fields: [parentId], references: [id])
+  // children   Comment[] @relation("ParentChild")
   parentId   String?
-  anime      Anime?    @relation(fields: [animeId], references: [id], onDelete: Cascade)
+  anime      Anime?   @relation(fields: [animeId], references: [id], onDelete: Cascade)
   animeId    Int?
 }
