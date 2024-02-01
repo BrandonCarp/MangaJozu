@@ -13,6 +13,7 @@ try {
       } 
        })
 console.log(createdUser)
+
   } catch (error) {
     console.log(`Error creating user:`, error)
   }
