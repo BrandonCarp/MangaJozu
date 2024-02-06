@@ -4,7 +4,11 @@ import { OpenidRequest } from "express-openid-connect";
 import { createUser, deleteUser, updateUser } from "./controllers/userController";
 import { fetchAnime} from "./controllers/mangaController";
 // import { createServer } from "./utils/app";
+import { createServer } from 'http';
+import { join } from 'path';
+import {Server} from 'socket.io';
 
+// https://youtu.be/a_xo-SbIfUQ?si=QUTshwRBKPS-hf-S
 require("dotenv").config();
 
 // require("dotenv").config();
@@ -14,13 +18,7 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const { auth } = require('express-openid-connect');
 
 
-
-// const app = createServer();
-
-
-
-
-  const config = {
+const config = {
     authRequired: false,
     auth0Logout: true,
     secret: `${CLIENT_SECRET}`,
@@ -50,7 +48,17 @@ const { auth } = require('express-openid-connect');
   
   app.use(express.urlencoded({ extended: true }));
   
+  // Socket IO
+  const server = createServer(app);
+  const io = new Server(server);
 
+  // app.get('/', (req, res) => {
+  //   res.sendFile(join(__dirname, 'index.html'));
+  // });
+
+  io.on('connection', (socket) => {
+    console.log(`a user connected`);
+  })
 
 
 
@@ -69,6 +77,7 @@ export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
 
 // User Validation + New User Creation
 app.get("/", async (req: Request, res: Response) => {
+  res.sendFile(join(__dirname, 'index.html'))
   try {
 
     const isAuthenticated = req.oidc.isAuthenticated();
