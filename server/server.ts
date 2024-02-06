@@ -127,8 +127,9 @@ app.get("/delete", async (req, res) => {
 
 
 // Anime Code
-
-
+// Live chat 
+https://socket.io/docs/v4/tutorial/introduction
+// https://hackernoon.com/building-a-real-time-chat-application-with-websocket
 // general anime pages
 app.get(["/anime"], async ( req: Request, res: Response) => {
   const pageNum = req.query.q as string | undefined;
