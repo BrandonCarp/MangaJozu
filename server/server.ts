@@ -3,15 +3,14 @@ import prisma from "./prisma/client";
 import { OpenidRequest } from "express-openid-connect";
 import { createUser, deleteUser, updateUser } from "./controllers/userController";
 import { fetchAnime} from "./controllers/mangaController";
-// import { createServer } from "./utils/app";
 import { createServer } from 'http';
 import { join } from 'path';
 import {Server} from 'socket.io';
-
-// https://youtu.be/a_xo-SbIfUQ?si=QUTshwRBKPS-hf-S
 require("dotenv").config();
 
-// require("dotenv").config();
+// https://www.youtube.com/watch?v=dXRRY37MPuk
+// tRPC live chat ^
+
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -136,9 +135,7 @@ app.get("/delete", async (req, res) => {
 
 
 // Anime Code
-// Live chat 
-https://socket.io/docs/v4/tutorial/introduction
-// https://hackernoon.com/building-a-real-time-chat-application-with-websocket
+
 // general anime pages
 app.get(["/anime"], async ( req: Request, res: Response) => {
   const pageNum = req.query.q as string | undefined;
