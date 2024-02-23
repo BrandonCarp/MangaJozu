@@ -7,9 +7,10 @@ import { createServer } from 'http';
 import { join } from 'path';
 import {Server} from 'socket.io';
 require("dotenv").config();
+// https://socket.io/get-started/chat
 
-// https://www.youtube.com/watch?v=dXRRY37MPuk
-// tRPC live chat ^
+
+
 
 const cors = require("cors");
 const DEV_PORT = process.env.DEV_PORT || 7000;
