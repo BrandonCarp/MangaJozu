@@ -3,12 +3,7 @@ import prisma from "./prisma/client";
 import { OpenidRequest } from "express-openid-connect";
 import { createUser, deleteUser, updateUser } from "./controllers/userController";
 import { fetchAnime} from "./controllers/mangaController";
-import { createServer } from 'http';
-import { join } from 'path';
-import {Server} from 'socket.io';
 require("dotenv").config();
-// https://socket.io/get-started/chat
-
 
 
 
@@ -48,75 +43,60 @@ const config = {
   
   app.use(express.urlencoded({ extended: true }));
   
-  // Socket IO
-  const server = createServer(app);
-  const io = new Server(server);
-
-  // app.get('/', (req, res) => {
-  //   res.sendFile(join(__dirname, 'index.html'));
-  // });
-
-  io.on('connection', (socket) => {
-    console.log(`a user connected`);
-  })
 
 
 
 
 
-
-
-
-export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
-  if (req.oidc.isAuthenticated()) {
-    return next();
-  } else {
-    return res.redirect('/login')
-  }
-}
+// export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+//   if (req.oidc.isAuthenticated()) {
+//     return next();
+//   } else {
+//     return res.redirect('/login')
+//   }
+// }
 
 // User Validation + New User Creation
-app.get("/", async (req: Request, res: Response) => {
-  res.sendFile(join(__dirname, 'index.html'))
-  try {
+// app.get("/", async (req: Request, res: Response) => {
+//   try {
 
-    const isAuthenticated = req.oidc.isAuthenticated();
+//     const isAuthenticated = req.oidc.isAuthenticated();
     
-    if (isAuthenticated) {
+//     if (isAuthenticated) {
 
-      const user  = req.oidc.user;
+//       const user  = req.oidc.user;
 
 
-      const existingUser = await prisma.customer.findUnique({
-        where: {
+//       const existingUser = await prisma.customer.findUnique({
+//         where: {
     
 
-          auth0Id: user?.sub, 
-        },
-      });
+//           auth0Id: user?.sub, 
+//         },
+//       });
 
-      if (existingUser) {
+//       if (existingUser) {
     
-        console.log("User exists in the database:", existingUser);
-      } else {
-        const newUser = {
-          auth0Id: user?.sub,
-          userName: user?.nickname,
-          email: user?.name
-        }
+//         console.log("User exists in the database:", existingUser);
+//       } else {
+//         const newUser = {
+//           auth0Id: user?.sub,
+//           userName: user?.nickname,
+//           email: user?.name
+//         }
        
-        await createUser(newUser);
+//         await createUser(newUser);
        
-        console.log("User inserted into the database");
-      }
-    }
+//         console.log("User inserted into the database");
+//       }
+//     }
 
-    res.send(isAuthenticated ? req.oidc.user : "Not logged in");
-  } catch (error) {
-    console.error("Error handling request:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+//     res.send(isAuthenticated ? req.oidc.user : "Not logged in");
+//   } catch (error) {
+//     console.error("Error handling request:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 // Delete User Endpoint
 app.get("/delete", async (req, res) => {
@@ -125,6 +105,7 @@ app.get("/delete", async (req, res) => {
     if (!auth0Id) {
       throw new Error("User not authenticated or missing auth0Id");
     }
+           
        await deleteUser(auth0Id);
 
        res.send("User deleted successfully");
@@ -135,7 +116,6 @@ app.get("/delete", async (req, res) => {
 })
 
 
-// Anime Code
 
 // general anime pages
 app.get(["/anime"], async ( req: Request, res: Response) => {
