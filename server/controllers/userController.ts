@@ -22,28 +22,24 @@ console.log(createdUser)
     console.log(`Error creating user:`, error)
   }
 }
-https://auth0.com/docs/api/management/v2/users/delete-users-by-id
+// https://auth0.com/docs/api/management/v2/users/delete-users-by-id
 // https://manage.auth0.com/dashboard/us/dev-7hi6cohckgtzdhik/apis/65637ad597a207546cfa2770/test
 export async function deleteUser(auth0Id: string) {
-
   let config = {
     method: 'delete',
     maxBodyLength: Infinity,
-    url: `https://login.auth0.com/api/v2/users/:65a5e7c18d9d565392c53e42`,
+    url: `https://login.auth0.com/api/v2/users/${auth0Id}`, // Interpolate auth0Id
     headers: { }
   };
 
-console.log(auth0Id)
+  
+
   try { 
-    console.log(auth0Id)
-    // auth0 Acc Deletion
-    await axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data))
-    }) 
-    .catch((error) => {
-      console.log(error)
-    })
+    // auth0 Account Deletion
+    console.log(auth0Id);
+    const response = await axios.request(config);
+    console.log(JSON.stringify(response.data));
+
     // Prisma Account Deletion
     // await prisma.customer.delete({
     //   where: {
@@ -51,10 +47,9 @@ console.log(auth0Id)
     //   },
     // }),
 
-console.log(`Deleted user`, auth0Id);
-
-  } catch (error){
-    console.log(`Error deleting user:`, error)
+    console.log(`Deleted user`, auth0Id);
+  } catch (error) {
+    console.log(`Error deleting user:`, error);
   }
 }
 
